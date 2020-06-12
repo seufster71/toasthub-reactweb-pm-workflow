@@ -8,8 +8,8 @@ import Select from '../../coreView/common/select-input';
 
 
 export default function PMWorkflowView({containerState, itemState, appPrefs, onListLimitChange,
-	onSearchChange, onSearchClick, onPaginationClick, onOrderBy, openDeleteModal, 
-	closeModal, onModify, onDelete, onEditRoles, inputChange, session}) {
+	onSearchChange, onSearchClick, onPaginationClick, onOrderBy, onOption,  
+	closeModal, inputChange, goBack, session}) {
 
     let columns = [];
     if (itemState.prefLabels != null && itemState.prefLabels.PM_WORKFLOW_PAGE != null) {
@@ -18,8 +18,17 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
     let group = "TABLE1";
     
     let header = "";
+    let parent = "";
+    if (itemState.parent != null) {
+		parent = itemState.parent.name;
+    }
+    
 	if (itemState.prefTexts.PM_WORKFLOW_PAGE != null && itemState.prefTexts.PM_WORKFLOW_PAGE.PM_WORKFLOW_PAGE_HEADER != null) {
 		header = itemState.prefTexts.PM_WORKFLOW_PAGE.PM_WORKFLOW_PAGE_HEADER.value;
+	}
+	
+	if (goBack != null && parent != null && parent != "") {
+		header = <div>{header} : <a onClick={() => goBack()} aria-hidden="true">{parent}</a></div>;
 	}
 	
 	let deleteModalHeader = "Delete ";
@@ -36,6 +45,7 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
     			<ListBuilder
 		  	      	containerState={containerState}
 		  	      	header={header}
+    				parent={parent}
 		  	      	items={itemState.items}
 		  	      	itemCount={itemState.itemCount}
 		  	      	listStart={itemState.listStart}
@@ -47,10 +57,7 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 		  	      	onSearchClick={onSearchClick}
 		  	      	onPaginationClick={onPaginationClick}
 		  			onOrderBy={onOrderBy}
-	  				onHeader={onModify}
-	  				onOption1={onModify}
-	  				onOption2={openDeleteModal}
-	  				onOption3={onEditRoles}
+    				onOption={onOption}
 		  			orderCriteria={itemState.orderCriteria}
 	  				searchCriteria={itemState.searchCriteria}
 		  	      />
@@ -58,6 +65,7 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 	    		<Table
 	    			containerState={containerState}
 	    			header={header}
+	    			parent={parent}
 	    			items={itemState.items}
 	    			itemCount={itemState.itemCount}
 	    			listStart={itemState.listStart}
@@ -70,15 +78,12 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 	    			onSearchClick={onSearchClick}
 	    			onPaginationClick={onPaginationClick}
 	    			onOrderBy={onOrderBy}
-	    			onHeader={onModify}
-	    			onOption1={onModify}
-	    			onOption2={openDeleteModal}
-	    			onOption3={onEditRoles}
+	    			onOption={onOption}
 	    			orderCriteria={itemState.orderCriteria}
 					searchCriteria={itemState.searchCriteria}
 	    		/>
     		)}
-    		<Modal isOpen={containerState.isDeleteModalOpen} onClose={closeModal()} >
+    		<Modal isOpen={containerState.isDeleteModalOpen} onClose={() => closeModal()} >
     			<div className="modal-dialog">
     				<div className="modal-content">
     					<div className="modal-header">
@@ -89,8 +94,8 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
     						<h3>Are you sure you want to delete?</h3>
     					</div>
     					<div className="modal-footer">
-    						<button type="button" className="btn btn-primary" onClick={onDelete(containerState.selected)}>Delete</button>
-    						<button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={closeModal()}>Close</button>
+    						<button type="button" className="btn btn-primary" onClick={() => onOption("DELETEFINAL",containerState.selected)}>Delete</button>
+    						<button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => closeModal()}>Close</button>
     					</div>
     				</div>
     			</div>
@@ -111,9 +116,8 @@ PMWorkflowView.propTypes = {
   onOrderBy: PropTypes.func, 
   openDeleteModal: PropTypes.func,
   closeModal: PropTypes.func,
-  onModify: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEditRoles: PropTypes.func,
+  onOption: PropTypes.func,
   inputChange: PropTypes.func,
+  goBack: PropTypes.func,
   session: PropTypes.object
 };
