@@ -7,13 +7,13 @@ import Input from '../../coreView/common/text-input';
 import Select from '../../coreView/common/select-input';
 
 
-export default function PMWorkflowView({containerState, itemState, appPrefs, onListLimitChange,
+export default function PMWorkflowStepView({containerState, itemState, appPrefs, onListLimitChange,
 	onSearchChange, onSearchClick, onPaginationClick, onOrderBy, onOption,  
 	closeModal, inputChange, goBack, session}) {
 
     let columns = [];
-    if (itemState.prefLabels != null && itemState.prefLabels.PM_WORKFLOW_PAGE != null) {
-    	columns = itemState.prefLabels.PM_WORKFLOW_PAGE;
+    if (itemState.prefLabels != null && itemState.prefLabels.PM_WORKFLOW_STEP_PAGE != null) {
+    	columns = itemState.prefLabels.PM_WORKFLOW_STEP_PAGE;
     }
     let group = "TABLE1";
     
@@ -23,8 +23,13 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 		parent = itemState.parent.name;
     }
     
-	if (itemState.prefTexts.PM_WORKFLOW_PAGE != null && itemState.prefTexts.PM_WORKFLOW_PAGE.PM_WORKFLOW_PAGE_HEADER != null) {
-		header = itemState.prefTexts.PM_WORKFLOW_PAGE.PM_WORKFLOW_PAGE_HEADER.value;
+	if (itemState.prefTexts.PM_WORKFLOW_STEP_PAGE != null && itemState.prefTexts.PM_WORKFLOW_STEP_PAGE.PM_WORKFLOW_STEP_PAGE_HEADER != null) {
+		header = itemState.prefTexts.PM_WORKFLOW_STEP_PAGE.PM_WORKFLOW_STEP_PAGE_HEADER.value;
+	}
+	
+	let moveHeader = "";
+	if (itemState.moveSelectedItem != null) {
+		moveHeader = "Moving:" + itemState.moveSelectedItem.name;
 	}
 	
 	if (goBack != null && parent != null && parent != "") {
@@ -60,6 +65,7 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
     				onOption={onOption}
 		  			orderCriteria={itemState.orderCriteria}
 	  				searchCriteria={itemState.searchCriteria}
+    				moveSelectedItem={itemState.moveSelectedItem}
 		  	      />
     		) : (
 	    		<Table
@@ -81,6 +87,8 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 	    			onOption={onOption}
 	    			orderCriteria={itemState.orderCriteria}
 					searchCriteria={itemState.searchCriteria}
+	    			moveSelectedItem={itemState.moveSelectedItem}
+	    			moveHeader={moveHeader}
 	    		/>
     		)}
     		<Modal isOpen={containerState.isDeleteModalOpen} onClose={() => closeModal()} >
@@ -105,7 +113,7 @@ export default function PMWorkflowView({containerState, itemState, appPrefs, onL
 }
 
 
-PMWorkflowView.propTypes = {
+PMWorkflowStepView.propTypes = {
   containerState: PropTypes.object,
   itemState: PropTypes.object,
   appPrefs: PropTypes.object,
