@@ -11,7 +11,7 @@ export default function PMWorkflowStepModifyView({containerState, itemState, ite
     
     return (
     	<FormBuilder containerState={containerState} itemState={itemState} item={item} formName={formName} formTitle={formTitle} formGroup={formGroup} 
-    	inputFields={inputFields} appPrefs={appPrefs} prefForms={itemPrefForms} onSave={onSave} onCancel={onCancel} onChange={inputChange} selectChange={selectChange}/>
+    	inputFields={inputFields} appPrefs={appPrefs} prefForms={itemPrefForms} onSave={onSave} onCancel={onCancel} inputChange={inputChange} selectChange={selectChange}/>
     );
 }
 
